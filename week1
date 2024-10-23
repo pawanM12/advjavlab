@@ -1,1 +1,67 @@
+import java.util.Scanner;
+
+class Invoice {
+    // Private data members
+    private Integer item_id;
+    private String item_name;
+    private Integer item_type;
+    private Integer item_quantity;
+    private Double item_price;
+
+    // Method to get item details from the user
+    public void getDetails() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Item ID: ");
+        item_id = scanner.nextInt();
+        System.out.print("Enter Item Name: ");
+        scanner.nextLine();  // Consume newline
+        item_name = scanner.nextLine();
+        System.out.print("Enter Item Type (1/2/3/4): ");
+        item_type = scanner.nextInt();
+        System.out.print("Enter Item Quantity: ");
+        item_quantity = scanner.nextInt();
+        System.out.print("Enter Item Price: ");
+        item_price = scanner.nextDouble();
+    }
+
+    // Private method to calculate GST tax based on item type
+    private double calculateTax() {
+        double gstRate = switch (item_type) {
+            case 1 -> 0.05;  // 5% GST for Type 1
+            case 2 -> 0.12;  // 12% GST for Type 2
+            case 3 -> 0.18;  // 18% GST for Type 3
+            case 4 -> 0.28;  // 28% GST for Type 4
+            default -> 0.0;  // Invalid type, no tax
+        };
+        return item_price * item_quantity * gstRate;
+    }
+
+    // Method to print the invoice details
+    public void printInvoice() {
+        double totalTax = calculateTax();
+        double totalAmount = item_price * item_quantity + totalTax;
+
+        System.out.printf("\nItem ID: %d | Name: %s | Quantity: %d | Price: %.2f | GST: %.2f | Total: %.2f\n",
+                item_id, item_name, item_quantity, item_price, totalTax, totalAmount);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter number of items: ");
+        int numItems = scanner.nextInt();
+
+        // Create an array of Invoice objects
+        Invoice[] items = new Invoice[numItems];
+
+        // Get details for each item and print invoice
+        for (int i = 0; i < numItems; i++) {
+            items[i] = new Invoice();
+            System.out.println("\nEnter details for item " + (i + 1) + ":");
+            items[i].getDetails();
+            items[i].printInvoice();
+        }
+    }
+}
 
