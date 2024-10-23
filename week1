@@ -26,13 +26,24 @@ class Invoice {
 
     // Private method to calculate GST tax based on item type
     private double calculateTax() {
-        double gstRate = switch (item_type) {
-            case 1 -> 0.05;  // 5% GST for Type 1
-            case 2 -> 0.12;  // 12% GST for Type 2
-            case 3 -> 0.18;  // 18% GST for Type 3
-            case 4 -> 0.28;  // 28% GST for Type 4
-            default -> 0.0;  // Invalid type, no tax
-        };
+        double gstRate;
+        switch (item_type) {
+            case 1:
+                gstRate = 0.05;  // 5% GST for Type 1
+                break;
+            case 2:
+                gstRate = 0.12;  // 12% GST for Type 2
+                break;
+            case 3:
+                gstRate = 0.18;  // 18% GST for Type 3
+                break;
+            case 4:
+                gstRate = 0.28;  // 28% GST for Type 4
+                break;
+            default:
+                gstRate = 0.0;   // Invalid type, no tax
+                System.out.println("Invalid item type. No tax applied.");
+        }
         return item_price * item_quantity * gstRate;
     }
 
@@ -64,4 +75,3 @@ public class Main {
         }
     }
 }
-
