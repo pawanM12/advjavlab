@@ -1,0 +1,87 @@
+// EncryptDecrypt interface
+interface EncryptDecrypt {
+    String Encrypt(int direction, int step, String input);
+    String Decrypt(int direction, int step, String input);
+}
+
+// Class for encrypting phone numbers
+class EncryptNumber implements EncryptDecrypt {
+    @Override
+    public String Encrypt(int direction, int step, String number) {
+        return shift(number, direction, step);
+    }
+
+    @Override
+    public String Decrypt(int direction, int step, String number) {
+        return shift(number, direction == 1 ? 2 : 1, step); // Reverse direction for decryption
+    }
+
+    private String shift(String input, int direction, int step) {
+        StringBuilder result = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isDigit(c)) {
+                int base = '0';
+                int newChar = (c - base + (direction == 1 ? step : -step + 10)) % 10 + base; // Wrap around for digits
+                result.append((char) newChar);
+            } else {
+                result.append(c); // Non-digit characters remain unchanged
+            }
+        }
+        return result.toString();
+    }
+}
+
+// Class for encrypting email messages
+class EncryptMessage implements EncryptDecrypt {
+    @Override
+    public String Encrypt(int direction, int step, String message) {
+        return shift(message, direction, step);
+    }
+
+    @Override
+    public String Decrypt(int direction, int step, String message) {
+        return shift(message, direction == 1 ? 2 : 1, step);
+    }
+
+    private String shift(String input, int direction, int step) {
+        StringBuilder result = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isLetter(c)) {
+                char base = Character.isLowerCase(c) ? 'a' : 'A';
+                int newChar = (c - base + (direction == 1 ? step : -step + 26)) % 26 + base; // Wrap around for letters
+                result.append((char) newChar);
+            } else {
+                result.append(c); // Non-letter characters remain unchanged
+            }
+        }
+        return result.toString();
+    }
+}
+
+// Main class to demonstrate encryption and decryption
+public class CaesarCipherDemo {
+    public static void main(String[] args) {
+        EncryptNumber phoneEncryptor = new EncryptNumber();
+        EncryptMessage emailEncryptor = new EncryptMessage();
+
+        String phoneNumber = "1234567890";
+        String email = "example@mail.com";
+
+        // Encrypt and Decrypt Phone Number
+        String encryptedPhone = phoneEncryptor.Encrypt(1, 3, phoneNumber);
+        String decryptedPhone = phoneEncryptor.Decrypt(1, 3, encryptedPhone);
+
+        // Encrypt and Decrypt Email
+        String encryptedEmail = emailEncryptor.Encrypt(1, 3, email);
+        String decryptedEmail = emailEncryptor.Decrypt(1, 3, encryptedEmail);
+
+        // Output results
+        System.out.println("Phone Number: " + phoneNumber);
+        System.out.println("Encrypted Phone: " + encryptedPhone);
+        System.out.println("Decrypted Phone: " + decryptedPhone);
+        
+        System.out.println("\nEmail: " + email);
+        System.out.println("Encrypted Email: " + encryptedEmail);
+        System.out.println("Decrypted Email: " + decryptedEmail);
+    }
+}
